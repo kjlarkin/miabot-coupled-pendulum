@@ -1,17 +1,41 @@
 classdef CoupledOscillator < handle
-    %   CoupledOscillator uses two robots to simulate the motion of 
-    %   two pendulums which are attatched by a spring.  Spring constant 
-    %   (k), pendulum length (l), mass (m), and initial conditions t1,
-    %   t1_dot, t2, t2_dot, are adjustable.
-    %
-    %   METHODS
-    %   
+    %{ 
+       Names: Kevin Larkin and Adam Fisch
+       Class to run Miabot robots according to a coupled oscillator path
+       June 17, 2013
+    
+       CoupledOscillator uses two robots to simulate the motion of two
+       pendulums which are attatched by a spring.  Spring constant 
+       (k), pendulum length (l), mass (m), and initial conditions theta1,
+       theta1_dot, theta2, theta2_dot, are adjustable.
+    
+       METHODS
+       
+       start - begins a coupled oscillator movement command sequence and
+       displays the desired and actual results.
+    
+       DoublePendulum - takes in current states and time, and tells the
+       robots where to travel, based on the control law and pendulum
+       equations.
+    
+       Pendulum1 - takes in the current time, and determines where the
+       first pendulum should be.
+    
+       Pendulum2 - takes in the current time, and determines where the
+       second pendulum should be.
+    
+       DEPENDENCIES
+       
+       Miabots.m
+     
+    %}
+    
     
     properties
         k1 = 2;           % control constant for velocity
         k2 = 1;           % control constant for heading angle
         ks = 1;           % spring coefficient
-        l = 5;            % rope length
+        l = 5;            % pendulum rope length
         m = 20;           % pendulum mass
         g = 9.8;          % gravity constant
         Offset = .3;      % displacement from the origin to equilibrium
@@ -20,9 +44,9 @@ classdef CoupledOscillator < handle
         theta2 = 0;       % displacement theta for pendulum 2
         theta2_dot = .1;  % initial angular velocity for pendulum 2
         
-        initial_poses;    % the initial locations of the pendula (4x2)
+        initial_poses;    % the initial locations of the robots (4x2)
     end
-    properties (Hidden)
+    properties (Access = private)
         runTime;          % time to run the robot for
         lambda;           % period coeff. for mode 1
         omega;            % period coeff. for mode 2
@@ -101,6 +125,8 @@ classdef CoupledOscillator < handle
             close all
             obj.runTime = runTime;
             
+            % calculate the coefficients for equations of motion based on
+            % initial variables
             obj.lambda = sqrt(2*((obj.ks)/(obj.m)) + (obj.g)/(obj.l)); 
             obj.omega = sqrt((obj.g)/(obj.l));         
             
