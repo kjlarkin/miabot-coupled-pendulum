@@ -148,9 +148,13 @@ classdef CoupledOscillator < handle
             % plots the resulting path of the two robots against the ideal
             figure
             plot(m.get_history(1,'state_times'), m.get_history(1,'x'),...
-                 m.get_history(2,'state_times'), m.get_history(2,'x'),...
-                 u, (obj.Pendulum1(u)), u, (obj.Pendulum2(u)));
-            
+                'r', m.get_history(2,'state_times'),...
+                m.get_history(2,'x'), 'g', u, (obj.Pendulum1(u)), 'b',...
+                u, (obj.Pendulum2(u)), 'b');
+            xlabel('Time (s)');
+            ylabel('X-position (m)');
+            legend('Robot 1', 'Robot 2', 'Goal Trajectories');
+            title('Trajectory of Miabots Simulating a Coupled Pendulum');
         end
         
         function [ xgoal ] = Pendulum1(obj, t)
